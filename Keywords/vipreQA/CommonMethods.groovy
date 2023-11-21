@@ -142,6 +142,8 @@ public class CommonMethods {
 
 		WebUI.comment('Verify the values of Created Contact Object')
 		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/Contact/Verify_ContactObject'), 20, FailureHandling.STOP_ON_FAILURE)
+		//WebUI.scrollToElement(findTestObject('Object Repository/QA Sandbox/Contact/Tab_Details'), 20)
+		WebUI.scrollToPosition(0, 100)
 		WebUI.click(findTestObject('Object Repository/QA Sandbox/Contact/Tab_Details'), FailureHandling.STOP_ON_FAILURE)
 		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/Contact/Verify_NameField'), Name, FailureHandling.STOP_ON_FAILURE)
 		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/Contact/Verify_Email'), Email, FailureHandling.STOP_ON_FAILURE)
@@ -161,8 +163,114 @@ public class CommonMethods {
 		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/Contact/Verify_AccountName'), AccountName, FailureHandling.STOP_ON_FAILURE)
 	}
 
-}
+	@Keyword
+	def static void QuoteCreation(String SalesTerritory, String BillingEntity, String BillingModel, String QuoteType, String AccountName, String Contact, String SalesChannel, String BillingTerm) {
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/btn_DirectQuote'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/btn_DirectQuote'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/TxtVerify_NewDirectQuote'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.scrollToElement(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/lbl_SalesTerritory'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/lbl_SalesTerritory_Value'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/input_SalesTerritory', [('value') : SalesTerritory]), FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/lbl_BillingEntityNone'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/input_BillingEntity', [('value') : BillingEntity]), FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/BillingModel',[('value') : BillingModel]), BillingModel)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/btn_Save'), FailureHandling.STOP_ON_FAILURE)
 
+		WebUI.comment('Verify the value for the created quote')
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Tab_Related'), FailureHandling.STOP_ON_FAILURE)
+		if(WebUI.verifyElementNotVisible(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Tab_Related'), FailureHandling.OPTIONAL))
+		{
+			WebUI.scrollToElement(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Tab_Related'), 20)
+		}
+		WebUI.waitForElementVisible(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/lbl_Quotes'), 20)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Select_Quote'), FailureHandling.STOP_ON_FAILURE)
+
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/TxtVerify_Quote'), 20)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_QuoteType'), QuoteType)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_Account'), AccountName)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_PrimaryContact'), Contact)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_QuoteAssistant_AddProduct'), 20)
+		if(WebUI.verifyElementNotVisible(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/lbl_Status'),FailureHandling.OPTIONAL))
+		{
+			WebUI.scrollToElement(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/lbl_Status'), 20)
+		}
+		String Status = WebUI.getText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_Status'))
+		println('Status:'+Status)
+		WebUI.verifyMatch(Status, 'Draft', false)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_SalesChannel'), SalesChannel)
+		WebUI.scrollToElement(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/lbl_Status'), 20)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_BillingModel'), BillingModel)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_BillingTerm'), BillingTerm)
+		WebUI.verifyNotEqual(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/Verify_PaymentMethod'), null)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/btn_EditLines'), 20)
+	}
+
+
+	@Keyword
+	def static void EditQuoteLine(String Product, String Quantity) {
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/btn_EditLines'), 20)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/btn_EditLines'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.switchToFrame(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Iframe'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/VerifyTxt_EditQuote'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/btn_AddProduct'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/btn_AddProduct'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/VerifyTxt_ProductSelection'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/input_SearchProductBar'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.setText(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/input_SearchProductBar'), Product, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/btn_Search'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Verify_ProductCode', [('value') : Product]),	20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/chkbox_SelectProduct', [('value') : Product]), FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/btn_SelectSelectionProduct'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/VerifyTxt_EditQuote'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/input_EditQuantity'),FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/input_EditQuantity'),FailureHandling.STOP_ON_FAILURE)
+		WebUI.sendKeys(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/input_Quantity'), Quantity, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Txt_ProductName'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/btn_Save'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.waitForElementVisible(findTestObject('Object Repository/QA Sandbox/DirectQuote_Creation/btn_EditLines'), 20, FailureHandling.STOP_ON_FAILURE)
+
+		WebUI.comment('Quote Assistant message and button visibility')
+		if(WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/btn_Revalidate'), 20, FailureHandling.OPTIONAL))
+		{
+		//WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Verify_QuoteReadyForSigning'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Verify_QuoteReadyForSigning'), 'This quote is ready to send for signing.')
+		}
+		
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/btn_SendQuoteforSigning'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.comment('Verification of the QuoteLine and Product Quantity')
+		WebUI.scrollToPosition(99999, 99999)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Section_QuoteLine'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyNotEqual(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Field_LineName'), null)
+		//WebUI.verifyElementText(findTestObject('Object Repository/QA Sandbox/EditQuoteLine/Verify_Quantity',[('value') : Quantity]), Quantity)
+	}
+
+
+	@Keyword
+	def static void LogoutUser(String URL) {
+		//String URL = WebUI.getUrl()
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/LogoutUser/Link_LogoutUser'), 20, FailureHandling.STOP_ON_FAILURE)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/LogoutUser/Link_LogoutUser'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.navigateToUrl(URL, FailureHandling.STOP_ON_FAILURE)
+	}
+
+
+	@Keyword
+	def static void QuoteSigningandAccepting() {
+		WebUI.scrollToPosition(0,10)
+		WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/Quote/Quote_SystemTab/Tab_QuoteSystem'), 20)
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/Quote/Quote_SystemTab/Tab_QuoteSystem'),FailureHandling.STOP_ON_FAILURE)
+		if(WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/Quote/Quote_SystemTab/Verify_SignedDocumentValidation'), 20, FailureHandling.OPTIONAL))
+		{
+			WebUI.verifyElementPresent(findTestObject('Object Repository/QA Sandbox/Quote/Quote_SystemTab/Chkbox_OverrideSignedDocumentValidation'), 20, FailureHandling.STOP_ON_FAILURE)
+			WebUI.click(findTestObject('Object Repository/QA Sandbox/Quote/Quote_SystemTab/btn_EditOverride'), FailureHandling.STOP_ON_FAILURE)
+			WebUI.scrollToPosition(0, 40, FailureHandling.STOP_ON_FAILURE)
+			WebUI.click(findTestObject('Object Repository/QA Sandbox/Quote/Quote_SystemTab/chkbox_OverrideSigned'), FailureHandling.STOP_ON_FAILURE)
+			WebUI.click(findTestObject('Object Repository/QA Sandbox/Quote/Quote_SystemTab/btn_Save'), FailureHandling.STOP_ON_FAILURE)
+		}
+
+		WebUI.click(findTestObject('Object Repository/QA Sandbox/Quote/Quote_DetailsTab/Tab_QuoteDetails'), FailureHandling.STOP_ON_FAILURE)
+	}
+}
 
 
 
